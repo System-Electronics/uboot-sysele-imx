@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2019 NXP
- * Copyright 2024 Koan Software
+ * Copyright 2024 KOAN <https://koansoftware.com>
  */
 
 #ifndef __IMX8MP_EVK_H
@@ -173,7 +173,14 @@
 				"echo WARN: Cannot load the DT; " \
 			"fi; " \
 		"fi;\0" \
+	"swapper=echo Test storage device ...; " \
+		"if test -e mmc 1:1 ${fdtfile}; then " \
+			"echo Swap to microSD; " \
+			"setenv mmc dev 1; " \
+			"setenv mmcroot '/dev/mmcblk1p2 rootwait rw'; " \
+		"fi;\0" \
 	"bsp_bootcmd=echo Running BSP bootcmd ...; " \
+		"run swapper; " \
 		"mmc dev ${mmcdev}; if mmc rescan; then " \
 		   "if run loadbootscript; then " \
 			   "run bootscript; " \
@@ -195,7 +202,7 @@
 #define CONFIG_SYS_INIT_SP_ADDR \
 	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
 
-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"  /* USDHC2 */
+#define CONFIG_MMCROOT			"/dev/mmcblk2p2"  /* default device is eMMC */
 
 /* Totally 6GB DDR */
 #define CONFIG_SYS_SDRAM_BASE		0x40000000
