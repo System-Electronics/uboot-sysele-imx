@@ -176,7 +176,7 @@
 	"swapper=echo Test storage device ...; " \
 		"if test -e mmc 1:1 ${fdtfile}; then " \
 			"echo Swap to microSD; " \
-			"setenv mmc dev 1; " \
+			"setenv mmcdev 1; " \
 			"setenv mmcroot '/dev/mmcblk1p2 rootwait rw'; " \
 		"fi;\0" \
 	"bsp_bootcmd=echo Running BSP bootcmd ...; " \
