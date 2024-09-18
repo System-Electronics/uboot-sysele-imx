@@ -3,14 +3,14 @@
  * Copyright 2019 NXP
  *
  * ----------------------------------------------------------------------
- * MODIFICA PER 8GB (22-03-2024)
+ * CHANGES FOR 8GB CONFIGURATION (22-03-2024)
  * 
- * Le differenze sono le seguenti:
+ * Differences beetween 6GB and 8GB are the following:
  * 6GB                            8GB
  * {0x3d400200, 0x16}             {0x3d400200, 0x18},
  * {0x3d400218, 0x68070707}       {0x3d400218, 0x7070707)
  * {0x3d40021c, 0xf08}            {0x3d40021c, 0xf07}
- * Corrispondenti a questi registri imx8 relativi alla gestione della DDR
+ * These registers correspond to the following DDR addresses:
  * DDRC_ADDRMAP0 (3d400200)
  * DDRC_ADDRMAP6 (3d400218)
  * DDRC_ADDRMAP7 ((3d40021C)
