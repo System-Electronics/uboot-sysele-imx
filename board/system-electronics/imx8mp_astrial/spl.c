@@ -28,6 +28,10 @@
 #include <mmc.h>
 #include <asm/arch/ddr.h>
 
+extern struct dram_timing_info dram_timing_8gb;
+extern struct dram_timing_info dram_timing_4gb;
+extern struct dram_timing_info dram_timing_2gb;
+
 DECLARE_GLOBAL_DATA_PTR;
 
 int spl_board_boot_device(enum boot_device boot_dev_spl)
@@ -56,9 +60,33 @@ int spl_board_boot_device(enum boot_device boot_dev_spl)
 #endif
 }
 
+bool check_ram_available(long size)
+{
+	long sz = get_ram_size((long *)PHYS_SDRAM, size);
+
+	if (sz == size)
+		return true;
+
+	return false;
+}
+
 void spl_dram_init(void)
 {
-	ddr_init(&dram_timing);
+	if (!ddr_init(&dram_timing_8gb) && check_ram_available(SZ_4G + SZ_4G)) {
+		printf("DDRINFO: ddr_init for 8GB done\n");
+   } else {
+		printf("DDRINFO: ddr_init for 8GB failed, trying 4GB\n");
+		if (!ddr_init(&dram_timing_4gb) && check_ram_available(SZ_4G)) {
+			printf("DDRINFO: ddr_init for 4GB done\n");
+		} else {
+			printf("DDRINFO: ddr_init for 4GB failed, trying 2GB\n");
+			if (!ddr_init(&dram_timing_2gb) && check_ram_available(SZ_2G)) {
+				printf("DDRINFO: ddr_init for 2GB done\n");
+			} else {
+				printf("DDRINFO: ddr_init for 2GB failed\n");
+			}
+		}
+	}
 }
 
 void spl_board_init(void)
