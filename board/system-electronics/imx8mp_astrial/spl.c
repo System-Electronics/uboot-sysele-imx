@@ -72,21 +72,27 @@ bool check_ram_available(long size)
 
 void spl_dram_init(void)
 {
+#if defined(CONFIG_IMX8MP_ASTRIAL_RAM_8G)
 	if (!ddr_init(&dram_timing_8gb) && check_ram_available(SZ_4G + SZ_4G)) {
 		printf("DDRINFO: ddr_init for 8GB done\n");
-   } else {
-		printf("DDRINFO: ddr_init for 8GB failed, trying 4GB\n");
-		if (!ddr_init(&dram_timing_4gb) && check_ram_available(SZ_4G)) {
-			printf("DDRINFO: ddr_init for 4GB done\n");
-		} else {
-			printf("DDRINFO: ddr_init for 4GB failed, trying 2GB\n");
-			if (!ddr_init(&dram_timing_2gb) && check_ram_available(SZ_2G)) {
-				printf("DDRINFO: ddr_init for 2GB done\n");
-			} else {
-				printf("DDRINFO: ddr_init for 2GB failed\n");
-			}
-		}
+	} else {
+		printf("DDRINFO: ddr_init for 8GB failed\n");
 	}
+#elif defined(CONFIG_IMX8MP_ASTRIAL_RAM_4G)
+	if (!ddr_init(&dram_timing_4gb) && check_ram_available(SZ_4G)) {
+		printf("DDRINFO: ddr_init for 4GB done\n");
+	} else {
+		printf("DDRINFO: ddr_init for 4GB failed\n");
+	}
+#elif defined(CONFIG_IMX8MP_ASTRIAL_RAM_2G)
+	if (!ddr_init(&dram_timing_2gb) && check_ram_available(SZ_2G)) {
+		printf("DDRINFO: ddr_init for 2GB done\n");
+	} else {
+		printf("DDRINFO: ddr_init for 2GB failed\n");
+	}
+#else
+#error "Missing any of CONFIG_IMX8MO_ASTRIAL_RAM_XG"
+#endif
 }
 
 void spl_board_init(void)
