@@ -599,3 +599,14 @@ int is_recovery_key_pressing(void)
 }
 #endif /* CONFIG_ANDROID_RECOVERY */
 #endif /* CONFIG_FSL_FASTBOOT */
+
+int board_phys_sdram_size(phys_size_t *size)
+{
+	if (!size)
+		return -EINVAL;
+
+	/* PHYS_SDRAM*_SIZE is to max of 8GB, but there are also the 4GB and 2GB variants */
+	*size = get_ram_size((void *)PHYS_SDRAM, PHYS_SDRAM_SIZE + PHYS_SDRAM_2_SIZE);
+
+	return 0;
+}
